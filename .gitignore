@@ -1,0 +1,6 @@
+./*.csv
+./*.json
+./*.yml
+.vscode
+.idea
+.env
