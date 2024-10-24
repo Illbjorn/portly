@@ -70,7 +70,7 @@ func parallelHostScan(network netip.Prefix, ports ...int) chan HostResult {
 		}
 
 		// Wait for all scanners to complete.
-		g.Wait()
+		_ = g.Wait() // TODO: Handle.
 	}()
 
 	return ch
@@ -103,7 +103,7 @@ func parallelPortScan(addr netip.Addr, ports ...int) chan PortResult {
 				})
 		}
 
-		g.Wait()
+		_ = g.Wait() // TODO: Handle.
 	}()
 
 	return ch

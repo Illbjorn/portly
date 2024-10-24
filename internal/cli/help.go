@@ -39,6 +39,6 @@ Options:
 )
 
 func helpAndExit(code int) {
-	println(helpText)
+	_, _ = println(helpText)
 	os.Exit(code)
 }

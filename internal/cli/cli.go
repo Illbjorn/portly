@@ -57,9 +57,9 @@ func Run(args []string) {
 
 	// Output results to stdout.
 	for _, r := range res.Hosts {
-		println(r.Host)
+		_, _ = println(r.Host)
 		for _, port := range r.Ports {
-			println("  " + itoa(port.Port) + ": " + port.Status)
+			_, _ = println("  " + itoa(port.Port) + ": " + port.Status)
 		}
 	}
 }
@@ -70,7 +70,6 @@ func parseTarget(target string) netip.Prefix {
 
 	// If the string doesn't contain a forward slash, parse as a single IP.
 	if !strings.Contains(target, "/") {
-		println(target + "/32")
 		prefix, err = netip.ParsePrefix(target + "/32")
 	} else {
 		prefix, err = netip.ParsePrefix(target)
@@ -99,8 +98,6 @@ func parsePorts(portStr string) []int {
 
 	return ports
 }
-
-type marshalFn func(v any) ([]byte, error)
 
 func writeResultJSON(results scan.ScanResult, path string) {
 	// Open a writable file stream.
@@ -143,7 +140,7 @@ func writeResultCSV(results scan.ScanResult, path string) {
 	for _, port := range results.Ports {
 		header = append(header, itoa(port))
 	}
-	enc.Write(header)
+	_ = enc.Write(header)
 	enc.Flush()
 
 	for _, result := range results.Hosts {
@@ -152,7 +149,7 @@ func writeResultCSV(results scan.ScanResult, path string) {
 		for i, port := range result.Ports {
 			row[i+1] = port.Status
 		}
-		enc.Write(row)
+		_ = enc.Write(row)
 		enc.Flush()
 	}
 }

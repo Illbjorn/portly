@@ -154,3 +154,13 @@ tasks:
       - <<: *needs-go
     desc: Executes all Go benchmarks.
     cmd: go test -benchmem -run=^$ -bench . ./...
+
+  install-linter:
+    aliases: [il]
+    desc: Installs the Golangci-Lint binary.
+    cmd: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
+
+  lint:
+    aliases: [l]
+    desc: Runs the Golangci linter.
+    cmd: golangci-lint run ./...
