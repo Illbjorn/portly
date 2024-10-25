@@ -10,25 +10,28 @@ import (
 var println = fmt.Println
 
 var helpText = fstr.Pairs(`
-{magenta}Portly, a simple, stalwart port scanner.{reset}
+{magenta}Portly, your stalwart port scanning companion.{reset}
 
 {cyan}Docs{reset} : https://github.com/Illbjorn/portly
 {cyan}Bugs{reset} : https://github.com/Illbjorn/portly/issues
 
 To perform a basic network scan:
 
-  {green}portly -s 192.168.255.0/24 -p 80,443{reset}
+  {green}portly -t 192.168.255.0/24 -p 80,443{reset}
 
 Options:
-  --target,         -tar  The subnet to be scanned. This can be provided in CIDR
-                          format (192.168.255.0/24) or as a single IP
-                          (192.168.255.1).
-  --ports,          -p    The ports to scan. These may be multiple ports,
+  --target,         -t    The subnet to be scanned. This can be provided in CIDR
+                          format (192.168.255.0/24), as a single IP
+                          (192.168.255.1) or a hostname.
+  --ports,          -p    The ports to scan. This value may be multiple ports,
                           comma-delimited.
-  --timeout,        -t    The time to wait (in milliseconds) for a response from
+  --timeout,        -to   The time to wait (in milliseconds) for a response from
                           the current target's port.
   --parallel-hosts, -ph   The number of hosts to scan concurrently.
   --parallel-ports, -pp   The number of ports per-host to scan concurrently.
+	--json,           -j    Serialize the result as JSON and write to disk.
+	--yaml,           -y    Serialize the result as YAML and write to disk.
+	--csv,            -c    Serialize the result as CSV and write to disk.
   --help,           -h    How you got here!
 `,
 	"cyan", "\033[0m",
