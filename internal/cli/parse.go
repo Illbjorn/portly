@@ -51,7 +51,7 @@ func parseTarget(target string) portly.Target {
 	case pIsHostname.MatchString(target):
 		return parseHostname(target)
 
-		// Unrecognized target.
+	// Unrecognized target.
 	default:
 		println("Failed to classify target: '" + target + "'.")
 		println("Only a single IP, a single CIDR network and hostnames are supported currently.")
