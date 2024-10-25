@@ -28,6 +28,8 @@ Options:
   --timeout,        -to   The time to wait for a response from the current
                           target's port. This must be a valid Go Duration.
                           Examples: 1000ms, 1s, 1m30s.
+  --open-only,      -oo   Filters results to only those where the port was
+                          'open'.
   --parallel-hosts, -ph   The number of hosts to scan concurrently.
   --parallel-ports, -pp   The number of ports per-host to scan concurrently.
   --json,           -j    Serialize the result as JSON and write to disk.

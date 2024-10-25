@@ -18,6 +18,7 @@ type flags struct {
 	ParallelHosts int
 	ParallelPorts int
 	Timeout       time.Duration
+	OpenOnly      bool
 }
 
 func parseFlags() flags {
@@ -38,6 +39,12 @@ func parseFlags() flags {
 	// Time to wait, per-port per-host, before considering it "closed".
 	timeout := fs.Duration("timeout", 1000*time.Millisecond, "--timeout [duration]")
 	fs.DurationVar(timeout, "to", 1000*time.Millisecond, "-to [duration]")
+
+	// --open-only, -oo
+	// Filters output returned to both stdout and serialized targets to only OPEN
+	// ports.
+	openOnly := fs.Bool("open-only", false, "--open-only")
+	fs.BoolVar(openOnly, "oo", false, "-oo")
 
 	// --json, -j
 	// Serialize the results as JSON and write to disk.
@@ -79,6 +86,7 @@ func parseFlags() flags {
 	f.AsCSV = *asCSV
 	f.ParallelHosts = *parallelHosts
 	f.ParallelPorts = *parallelPorts
+	f.OpenOnly = *openOnly
 
 	// Confirm we have required values.
 	assert.NE(f.Target, "", "The --target, -s flag is required.")

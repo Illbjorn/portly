@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"slices"
+
 	"github.com/illbjorn/portly/internal/assert"
 	"github.com/illbjorn/portly/internal/portly"
 )
@@ -30,6 +32,17 @@ func Run(args []string) {
 	// Perform the scan.
 	res := portly.Scan(target, ports...)
 	assert.GT(len(res.Hosts), 0, "Received no scan results.")
+
+	// Filter results if OpenOnly is set.
+	if flags.OpenOnly {
+		for i, hres := range res.Hosts {
+			res.Hosts[i].Ports = slices.DeleteFunc(
+				hres.Ports,
+				func(pres portly.PortResult) bool {
+					return pres.Status == portly.PORT_STATUS_CLOSED
+				})
+		}
+	}
 
 	// Output to JSON if specified.
 	if flags.AsJSON != "" {
