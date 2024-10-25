@@ -1,8 +1,11 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: '3'
 
 output: prefixed
 silent: true
 interval: 250ms
+
+dotenv: ['.env']
 
 vars:
   PATH_DIR_PORTLY_MAIN: ./cmd/portly
@@ -10,7 +13,7 @@ vars:
 
 tasks:
   reqs:
-    prerequisites:
+    preconditions:
       - &needs-go
         sh: 'which go'
         msg: Go must be installed to invoke this task.
@@ -134,23 +137,24 @@ tasks:
   #                                                                            #
   ##############################################################################
   dev:
-    alias: [d]
+    aliases: [d]
     desc: Build and run the port scanner.
     cmd: |
       go run {{ .PATH_DIR_PORTLY_MAIN }} \
-        -tar {{ .DEV_SCAN_TARGET }} \
-        -p {{ .DEV_SCAN_PORTS }}
+        -t {{ .DEV_SCAN_TARGET }} \
+        -p {{ .DEV_SCAN_PORTS }} \
+        -j ./out.json
 
   test:
     aliases: [t]
-    prerequisites:
+    preconditions:
       - <<: *needs-go
     desc: Executes all Go tests.
     cmd: go test -timeout 30s ./...
 
   bench:
     aliases: [be]
-    prerequisites:
+    preconditions:
       - <<: *needs-go
     desc: Executes all Go benchmarks.
     cmd: go test -benchmem -run=^$ -bench . ./...
@@ -164,3 +168,8 @@ tasks:
     aliases: [l]
     desc: Runs the Golangci linter.
     cmd: golangci-lint run ./...
+
+  install:
+    aliases: [i]
+    desc: Performs a `go install` of Portly.
+    cmd: go install ./cmd/portly
