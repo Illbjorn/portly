@@ -3,8 +3,7 @@ package portly
 import (
 	"net"
 	"net/netip"
-	"sort"
-	"strconv"
+	"slices"
 	"time"
 
 	"golang.org/x/sync/errgroup"
@@ -100,8 +99,20 @@ func Scan(target Target, ports ...int) Result {
 
 	for scan := range parallelHostScan(target, ports...) {
 		// Sort each host result port slice by port number.
-		sort.Slice(scan.Ports, func(i, j int) bool {
-			return scan.Ports[i].Port < scan.Ports[j].Port
+		slices.SortFunc(scan.Ports, func(left, right PortResult) int {
+			switch {
+			// left > right
+			case left.Port > right.Port:
+				return 1
+
+			// left < right
+			case left.Port > right.Port:
+				return -1
+
+			// left == right
+			default:
+				return 0
+			}
 		})
 
 		// Add the result.
@@ -109,8 +120,8 @@ func Scan(target Target, ports ...int) Result {
 	}
 
 	// Sort the host results slice by host IP.
-	sort.Slice(res.Hosts, func(i, j int) bool {
-		return res.Hosts[i].Host.Compare(res.Hosts[j].Host) < 0
+	slices.SortFunc(res.Hosts, func(left, right HostResult) int {
+		return left.Host.Compare(right.Host)
 	})
 
 	return res
