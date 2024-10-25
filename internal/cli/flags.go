@@ -64,6 +64,9 @@ func parseFlags() flags {
 	parallelPorts := fs.Int("parallel-ports", 8, "--parallel-ports [num]")
 	fs.IntVar(parallelPorts, "pp", 8, "-pp [num]")
 
+	// Override the default usage text.
+	fs.Usage = func() { fmt.Fprint(os.Stderr, helpText) }
+
 	// Parse flags.
 	fs.Parse(os.Args[1:])
 
