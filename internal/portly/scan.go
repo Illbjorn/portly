@@ -34,7 +34,7 @@ func parallelHostScan(target Target, ports ...int) chan HostResult {
 		g.SetLimit(ConcurrentHostScans)
 
 		// Scan all target IPs.
-		for ip := range target.Gen() {
+		for ip := range target.gen() {
 			// Spawn the scanner.
 			// This respects `ConcurrentHostScans` as a concurrency limit.
 			g.Go(
