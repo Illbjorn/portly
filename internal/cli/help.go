@@ -25,14 +25,16 @@ Options:
                           (192.168.255.1) or a hostname.
   --ports,          -p    The ports to scan. This value may be multiple ports,
                           comma-delimited.
-  --timeout,        -to   The time to wait (in milliseconds) for a response from
-                          the current target's port.
+  --timeout,        -to   The time to wait for a response from the current
+                          target's port. This must be a valid Go Duration.
+                          Examples: 1000ms, 1s, 1m30s.
   --parallel-hosts, -ph   The number of hosts to scan concurrently.
   --parallel-ports, -pp   The number of ports per-host to scan concurrently.
-	--json,           -j    Serialize the result as JSON and write to disk.
-	--yaml,           -y    Serialize the result as YAML and write to disk.
-	--csv,            -c    Serialize the result as CSV and write to disk.
+  --json,           -j    Serialize the result as JSON and write to disk.
+  --yaml,           -y    Serialize the result as YAML and write to disk.
+  --csv,            -c    Serialize the result as CSV and write to disk.
   --help,           -h    How you got here!
+
 `,
 	"cyan", "\033[0m",
 	"yellow", "\033[33m",
