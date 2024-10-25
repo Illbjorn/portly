@@ -16,9 +16,8 @@ const (
 )
 
 var (
-	Timeout = 1000 * time.Millisecond
-	itoa    = strconv.Itoa
-
+	// Default operating values.
+	Timeout             = 1000 * time.Millisecond
 	ConcurrentHostScans = 254
 	ConcurrentPortScans = 8
 )
