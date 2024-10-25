@@ -1,8 +1,6 @@
 package cli
 
 import (
-	"time"
-
 	"github.com/illbjorn/portly/internal/assert"
 	"github.com/illbjorn/portly/internal/portly"
 )
@@ -23,7 +21,7 @@ func Run(args []string) {
 	ports, longestPort := parsePorts(flags.Ports)
 
 	// Assign desired timeout duration.
-	portly.Timeout = time.Duration(flags.Timeout) * time.Millisecond
+	portly.Timeout = flags.Timeout
 
 	// Assign desired concurrency values.
 	portly.ConcurrentHostScans = flags.ParallelHosts

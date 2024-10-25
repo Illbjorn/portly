@@ -2,6 +2,9 @@ package cli
 
 import (
 	"flag"
+	"fmt"
+	"os"
+	"time"
 
 	"github.com/illbjorn/portly/internal/assert"
 )
@@ -14,7 +17,7 @@ type flags struct {
 	AsCSV         string
 	ParallelHosts int
 	ParallelPorts int
-	Timeout       int
+	Timeout       time.Duration
 }
 
 func parseFlags() flags {
