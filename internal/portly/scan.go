@@ -1,4 +1,4 @@
-package scan
+package portly
 
 import (
 	"net"
@@ -23,7 +23,7 @@ var (
 	ConcurrentPortScans = 8
 )
 
-func parallelHostScan(network netip.Prefix, ports ...int) chan HostResult {
+func parallelHostScan(target Target, ports ...int) chan HostResult {
 	// Init the firehose!
 	ch := make(chan HostResult, ConcurrentHostScans)
 
@@ -35,18 +35,8 @@ func parallelHostScan(network netip.Prefix, ports ...int) chan HostResult {
 		g := errgroup.Group{}
 		g.SetLimit(ConcurrentHostScans)
 
-		// Prepare the first address to scan.
-		// We advance immediately as to skip the network ID.
-		next := network.Addr()
-		for {
-			// We look position+1 here to skip the network broadcast.
-			if !network.Contains(next) {
-				break
-			}
-
-			// Create another reference to `next` to close over.
-			ip := next
-
+		// Scan all target IPs.
+		for ip := range target.Gen() {
 			// Spawn the scanner.
 			// This respects `ConcurrentHostScans` as a concurrency limit.
 			g.Go(
@@ -64,9 +54,6 @@ func parallelHostScan(network netip.Prefix, ports ...int) chan HostResult {
 
 					return nil
 				})
-
-			// Advance to the next address to scan.
-			next = next.Next()
 		}
 
 		// Wait for all scanners to complete.
@@ -109,29 +96,10 @@ func parallelPortScan(addr netip.Addr, ports ...int) chan PortResult {
 	return ch
 }
 
-func Host(prefix netip.Prefix, ports ...int) ScanResult {
-	res := newScanResult(prefix, ports...)
-	host := newHostResult(prefix.Addr())
+func Scan(target Target, ports ...int) Result {
+	res := newScanResult(target, ports...)
 
-	// Iterate all ports to be scanned.
-	for port := range parallelPortScan(prefix.Addr(), ports...) {
-		host.Ports = append(host.Ports, port)
-	}
-
-	// Sort the ports slice.
-	sort.Slice(host.Ports, func(i, j int) bool {
-		return host.Ports[i].Port < host.Ports[j].Port
-	})
-
-	res.Hosts = []HostResult{host}
-
-	return res
-}
-
-func Range(network netip.Prefix, ports ...int) ScanResult {
-	res := newScanResult(network, ports...)
-
-	for scan := range parallelHostScan(network, ports...) {
+	for scan := range parallelHostScan(target, ports...) {
 		// Sort each host result port slice by port number.
 		sort.Slice(scan.Ports, func(i, j int) bool {
 			return scan.Ports[i].Port < scan.Ports[j].Port

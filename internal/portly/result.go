@@ -1,18 +1,18 @@
-package scan
+package portly
 
 import "net/netip"
 
-func newScanResult(addr netip.Prefix, ports ...int) ScanResult {
-	return ScanResult{
-		Network: addr,
-		Ports:   ports,
+func newScanResult(target Target, ports ...int) Result {
+	return Result{
+		Target: target,
+		Ports:  ports,
 	}
 }
 
-type ScanResult struct {
-	Network netip.Prefix
-	Ports   []int
-	Hosts   []HostResult
+type Result struct {
+	Target Target
+	Ports  []int
+	Hosts  []HostResult
 }
 
 func newHostResult(addr netip.Addr) HostResult {

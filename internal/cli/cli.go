@@ -1,17 +1,10 @@
 package cli
 
 import (
-	"encoding/csv"
-	"encoding/json"
-	"net/netip"
-	"os"
-	"strings"
 	"time"
 
-	"github.com/illbjorn/fstr"
 	"github.com/illbjorn/portly/internal/assert"
-	"github.com/illbjorn/portly/internal/scan"
-	"gopkg.in/yaml.v3"
+	"github.com/illbjorn/portly/internal/portly"
 )
 
 func Run(args []string) {
@@ -27,17 +20,17 @@ func Run(args []string) {
 	target := parseTarget(flags.Target)
 
 	// Parse the port(s).
-	ports := parsePorts(flags.Ports)
+	ports, longestPort := parsePorts(flags.Ports)
 
 	// Assign desired timeout duration.
-	scan.Timeout = time.Duration(flags.Timeout) * time.Millisecond
+	portly.Timeout = time.Duration(flags.Timeout) * time.Millisecond
 
 	// Assign desired concurrency values.
-	scan.ConcurrentHostScans = flags.ParallelHosts
-	scan.ConcurrentPortScans = flags.ParallelPorts
+	portly.ConcurrentHostScans = flags.ParallelHosts
+	portly.ConcurrentPortScans = flags.ParallelPorts
 
 	// Perform the scan.
-	res := scan.Range(target, ports...)
+	res := portly.Scan(target, ports...)
 	assert.GT(len(res.Hosts), 0, "Received no scan results.")
 
 	// Output to JSON if specified.
